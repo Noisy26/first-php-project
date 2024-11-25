@@ -24,6 +24,7 @@
         <div class="form-group">
             <button type="submit">Login</button>
         </div>
+        <a href="pages/forStudents.php">Я студент</a>
     </form>
 </div>
 <?php

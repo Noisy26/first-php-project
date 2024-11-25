@@ -56,3 +56,6 @@ body {
     margin-bottom: 10px;
     text-align: center;
 }
+a {
+    color: gray;
+}

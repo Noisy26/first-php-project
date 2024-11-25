@@ -62,7 +62,6 @@ if (isset($_POST['delete_id'])) {
 }
 
 if (isset($_POST['new_recording'])) {
-    echo 'равно' . isset($_POST['new_recording']);
     $name = $_POST['new_name'];
     $dean_full_name = $_POST['new_dean_name'];
     $room_number = $_POST['new_room_number'];

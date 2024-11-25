@@ -1,0 +1,79 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --gold-accent: #F2BB55;
+}
+
+body {
+    font-family: 'Onest', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 1.5;
+    background-image: url("pattern1.png");
+    background-repeat: repeat;
+}
+
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    color: #F2BB55;
+}
+
+.navbar {
+    padding: 20px;
+}
+
+.navbar .container ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar ul li a {
+    padding: 10px 20px;
+    display: block;
+    font-weight: 600;
+    transition: 0.5s; 
+}
+
+.navbar ul a:hover {
+    color: #fff;
+    transition: 0.5s; 
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.container-sm {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.table {
+    color: #fff;
+    display: flex;
+    padding: 24px 0;
+    font-size: 16px;
+}
+
+/* BUTTONS */
+.btn {
+    border: 2px solid var(--gold-accent);
+    display: inline-block;
+    padding: 13px 20px;
+}
+
+.btn:hover {
+    border-color: #fff;
+}

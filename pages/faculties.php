@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <?php require '../dbConnect.php' ?>
-    <link href="../css/pagesStyles.css" rel="stylesheet">
+    <link href="../styles/pagesStyles.css" rel="stylesheet">
 </head>
 
 <body>

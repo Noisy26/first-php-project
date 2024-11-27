@@ -121,7 +121,7 @@
             <form method="post">
                 <input type="hidden" name="delete_id" id="delete_id"> <!--Невидимое поле ввода для передачи информации об id записи-->
                 <input type="hidden" name="new_recording" id="new_recording">
-                <button type="submit" id="add_button">
+                <button disabled>
                     <a href="#newRecording">Добавить новую запись</a>
                 </button>
                 <button type="submit" disabled id="delete_button">

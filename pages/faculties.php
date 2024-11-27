@@ -130,8 +130,8 @@
             <form method="post">
                 <input type="hidden" name="delete_id" id="delete_id"> <!--Невидимое поле ввода для передачи информации об id записи-->
                 <input type="hidden" name="new_recording" id="new_recording">
-                <button type="submit" id="add_button">
-                    Добавить новую запись
+                <button disabled>
+                    <a href="#newRecording">Добавить новую запись</a>
                 </button>
                 <button type="submit" disabled id="delete_button">
                     Удалить выбранную строку
@@ -173,10 +173,8 @@
     while ($row = $stmt->fetch()):
     ?>
         <div id="editForm<?= $row['id'] ?>" class="modal">
-            <link rel="stylesheet" href="css/modal_change.css">
             <div class="modal-content">
                 <a href="#" class="close">&times;</a>
-
                 <h2>Редактирование факультета</h2>
                 <form method="post">
                     <input type="hidden" name="update_id" value="<?= $row['id'] ?>">

@@ -23,9 +23,28 @@
     }
 
     if (isset($_POST['update_id'])) {
+        list($last_name, $first_name, $middle_name) = explode(" ", $_POST['teacher']);
+
+        $stmt = $pdo->prepare('SELECT id FROM teachers WHERE 
+        first_name = :first_name AND
+        last_name = :last_name AND
+        middle_name = :middle_name');
+        $stmt->execute([
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'middle_name' => $middle_name
+        ]);
+        $res = $stmt->fetch();
+
+        $stmt = $pdo->prepare('SELECT id FROM disciplines WHERE name = :name');
+        $stmt->execute([
+            'name' => $_POST['discipline']
+        ]);
+        $res2 = $stmt->fetch();
+
         $id = $_POST['update_id'];
-        $teacher_id = $_POST['teacher_id'];
-        $discipline_id = $_POST['discipline_id'];
+        $teacher_id = $res['id'];
+        $discipline_id = $res2['id'];
         $academic_year = $_POST['academic_year'];
         $semester = $_POST['semester'];
         $group_name = $_POST['group_name'];
@@ -69,8 +88,29 @@
     }
 
     if (isset($_POST['new_recording'])) {
-        $teacher_id = $_POST['new_teacher_id'];
-        $discipline_id = $_POST['new_discipline_id'];
+
+        list($last_name, $first_name, $middle_name) = explode(" ", $_POST['new_teacher']);
+        $disciplineName = $_POST['new_discipline'];
+
+        $stmt = $pdo->prepare('SELECT id FROM teachers WHERE 
+        first_name = :first_name AND
+        last_name = :last_name AND
+        middle_name = :middle_name');
+        $stmt->execute([
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'middle_name' => $middle_name
+        ]);
+        $res = $stmt->fetch();
+
+        $stmt = $pdo->prepare('SELECT id FROM disciplines WHERE name = :name');
+        $stmt->execute([
+            'name' => $disciplineName
+        ]);
+        $res2 = $stmt->fetch();
+
+        $teacher_id = $res['id'];
+        $discipline_id = $res2['id'];
         $academic_year = $_POST['new_academic_year'];
         $semester = $_POST['new_semester'];
         $group_name = $_POST['new_group_name'];
@@ -139,7 +179,7 @@
             <form method="post">
                 <input type="hidden" name="delete_id" id="delete_id"> <!--Невидимое поле ввода для передачи информации об id записи-->
                 <input type="hidden" name="new_recording" id="new_recording">
-                <button type="submit" id="add_button">
+                <button disabled>
                     <a href="#newRecording">Добавить новую запись</a>
                 </button>
                 <button type="submit" disabled id="delete_button">
@@ -159,8 +199,28 @@
             </tr>
             <?php while ($row = $stmt->fetch()): ?>
                 <tr onclick="document.getElementById('delete_id').value='<?= $row['id'] ?>'; document.getElementById('delete_button').disabled=false;">
-                    <td><?= $row['teacher_id'] ?></td>
-                    <td><?= $row['discipline_id'] ?></td>
+                    <td>
+                        <?php
+                        $stmt1 = $pdo->prepare('SELECT * FROM teachers WHERE id = :id');
+                        $stmt1->execute([
+                            'id' => $row['teacher_id']
+                        ]);
+                        $res = $stmt1->fetch();
+
+                        echo $res['last_name'] . ' ' . $res['first_name'] . ' ' . $res['middle_name'];
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        $stmt1 = $pdo->prepare('SELECT * FROM disciplines WHERE id = :id');
+                        $stmt1->execute([
+                            'id' => $row['discipline_id']
+                        ]);
+                        $res = $stmt1->fetch();
+
+                        echo $res['name'];
+                        ?>
+                    </td>
                     <td><?= $row['academic_year'] ?></td>
                     <td><?= $row['semester'] ?></td>
                     <td><?= $row['group_name'] ?></td>
@@ -183,6 +243,7 @@
 
     #Создание модальных окон для редактирования
     $stmt->execute();
+
     while ($row = $stmt->fetch()):
     ?>
         <div id="editForm<?= $row['id'] ?>" class="modal">
@@ -193,12 +254,30 @@
                     <input type="hidden" name="update_id" value="<?= $row['id'] ?>">
                     <label>
                         Преподаватель:
-                        <input type="text" name="teacher_id" value="<?= htmlspecialchars($row['teacher_id']) ?>">
+                        <select name="teacher">
+                            <?php
+                            $teachers = $pdo->query('SELECT * FROM teachers');
+                            while ($name = $teachers->fetch()):
+                            ?>
+                                <option>
+                                    <?= $name['last_name'] . ' ' . $name['first_name'] . ' ' . $name['middle_name'] ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </label>
                     <br>
                     <label>
                         Дисциплина:
-                        <input type="text" name="discipline_id" value="<?= htmlspecialchars($row['discipline_id']) ?>" required>
+                        <select name="discipline">
+                            <?php
+                            $disciplines = $pdo->query('SELECT * FROM disciplines');
+                            while ($name = $disciplines->fetch()):
+                            ?>
+                                <option>
+                                    <?= $name['name'] ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </label>
                     <br>
                     <label>
@@ -239,12 +318,30 @@
                 <input type="hidden" name="new_recording" value="gcfgxfxjgdj">
                 <label>
                     Преподаватель:
-                    <input type="text" name="new_teacher_id" required>
+                    <select name="new_teacher">
+                        <?php
+                        $teachers = $pdo->query('SELECT * FROM teachers');
+                        while ($name = $teachers->fetch()):
+                        ?>
+                            <option>
+                                <?= $name['last_name'] . ' ' . $name['first_name'] . ' ' . $name['middle_name'] ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </label>
                 <br>
                 <label>
                     Дисциплина:
-                    <input type="text" name="new_discipline_id" required>
+                    <select name="new_discipline">
+                        <?php
+                        $disciplines = $pdo->query('SELECT * FROM disciplines');
+                        while ($name = $disciplines->fetch()):
+                        ?>
+                            <option>
+                                <?= $name['name'] ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </label>
                 <br>
                 <label>

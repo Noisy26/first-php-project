@@ -23,11 +23,18 @@
     }
 
     if (isset($_POST['update_id'])) {
+        $department_name = $_POST['department_name'];
+        $stmt = $pdo->prepare('SELECT id FROM departments WHERE name = :name');
+        $stmt->execute([
+            'name' => $department_name
+        ]);
+        $res = $stmt->fetch();
+
         $id = $_POST['update_id'];
         $first_name = $_POST['first_name'];
         $last_name = $_POST['last_name'];
         $middle_name = $_POST['middle_name'];
-        $department_id = $_POST['department_id'];
+        $department_id = $res['id'];
         $birth_year = $_POST['birth_year'];
         $hire_year = $_POST['hire_year'];
         $experience = $_POST['experience'];
@@ -69,19 +76,32 @@
     if (isset($_POST['delete_id'])) {
         $deleteId = $_POST['delete_id'];
 
-        $stmt = $pdo->prepare('DELETE FROM teachers WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT * FROM workload WHERE teacher_id = :id');
         $stmt->execute(['id' => $deleteId]);
-        $_SESSION['message'] = "Строка с ID $deleteId удалена.";
+
+        if ($stmt->fetchAll() === array()) {
+            $stmt = $pdo->prepare('DELETE FROM teachers WHERE id = :id');
+            $stmt->execute(['id' => $deleteId]);
+            $_SESSION['message'] = "Строка с ID $deleteId удалена.";
+        } else {
+            $_SESSION['message'] = 'У преподавателя осталась запись с учебной загрузкой, сначала удалите её';
+        }
 
         header("Location: teachers.php"); // Перенаправляем на ту же страницу
         exit();
     }
 
     if (isset($_POST['new_recording'])) {
+        $department_name = $pdo->prepare('SELECT id FROM departments WHERE name = :name');
+        $department_name->execute([
+            'name' => $_POST['new_department']
+        ]);
+        $res = $department_name->fetch();
+
         $first_name = $_POST['new_first_name'];
         $last_name = $_POST['new_last_name'];
         $middle_name = $_POST['new_middle_name'];
-        $department_id = $_POST['new_department_id'];
+        $department_id = $res['id'];
         $birth_year = $_POST['new_birth_year'];
         $hire_year = $_POST['new_hire_year'];
         $experience = $_POST['new_experience'];
@@ -163,7 +183,7 @@
             <form method="post">
                 <input type="hidden" name="delete_id" id="delete_id"> <!--Невидимое поле ввода для передачи информации об id записи-->
                 <input type="hidden" name="new_recording" id="new_recording">
-                <button type="submit" id="add_button">
+                <button disabled>
                     <a href="#newRecording">Добавить новую запись</a>
                 </button>
                 <button type="submit" disabled id="delete_button">
@@ -189,7 +209,17 @@
                     <td><?= $row['first_name'] ?></td>
                     <td><?= $row['last_name'] ?></td>
                     <td><?= $row['middle_name'] ?></td>
-                    <td><?= $row['department_id'] ?></td>
+                    <td>
+                        <?php
+                        $stmt1 = $pdo->prepare('SELECT * FROM departments WHERE id = :id');
+                        $stmt1->execute([
+                            'id' => $row['department_id']
+                        ]);
+                        $res = $stmt1->fetch();
+
+                        echo $res['name'];
+                        ?>
+                    </td>
                     <td><?= $row['birth_year'] ?></td>
                     <td><?= $row['hire_year'] ?></td>
                     <td><?= $row['experience'] ?></td>
@@ -238,7 +268,16 @@
                     <br>
                     <label>
                         Кафедра:
-                        <input type="text" name="department_id" value="<?= htmlspecialchars($row['department_id']) ?>" required>
+                        <select name="department_name">
+                            <?php
+                            $departments = $pdo->query('SELECT * FROM departments');
+                            while ($name = $departments->fetch()):
+                            ?>
+                                <option <?php if ($name['id'] === $row['department_id']) echo 'selected' ?>>
+                                    <?= $name['name'] ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </label>
                     <br>
                     <label>
@@ -300,7 +339,16 @@
                 <br>
                 <label>
                     Кафедра:
-                    <input type="text" name="new_department_id" required>
+                    <select name="new_department">
+                        <?php
+                        $departments = $pdo->query('SELECT * FROM departments');
+                        while ($name = $departments->fetch()):
+                        ?>
+                            <option>
+                                <?= $name['name'] ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </label>
                 <br>
                 <label>

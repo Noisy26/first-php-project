@@ -1,0 +1,158 @@
+body {
+    font-family: Onest, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("pattern1.png");
+    background-repeat: repeat;
+}
+
+:root {
+    --gold-accent: #F2BB55;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+}
+
+.top-menu {
+    display: flex;
+    gap: 75px;
+    line-height: 50px;
+    padding: 0 10px;
+    border: 2px solid var(--gold-accent);
+    border-radius: 0 0 24px 24px;
+}
+
+.top-menu button {
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    color: var(--gold-accent);
+}
+
+.top-menu button:hover {
+    color: #fff;
+    transition: 0.5s;
+}
+
+#add_button {
+    background-color: transparent;
+    color: var(--gold-accent);
+    border: 2px solid var(--gold-accent);
+    border-radius: 24px;
+}
+
+#add_button:hover {
+    color: #fff;
+    border-color: #fff;
+    transition: 0.5s;
+}
+
+#delete_button {
+    background-color: transparent;
+    color: var(--gold-accent);
+    border: 2px solid var(--gold-accent);
+    border-radius: 24px;
+}
+
+#delete_button:disabled {
+    color: gray;
+    border-color: gray;
+    transition: 0.5s;
+}
+
+#delete_button:active {
+    background-color: transparent;
+    color: var(--gold-accent);
+    border: 2px solid var(--gold-accent);
+    border-radius: 24px;
+}
+
+#delete_button:hover:enabled {
+    color: #fff;
+    border-color: #fff;
+    transition: 0.5s;
+}
+
+.table-menu {
+    display: flex;
+    margin-bottom: 0px;
+    padding: 20px 0px 20px 0px;
+    justify-content: space-between;
+    background: rgb(14, 23, 41);
+    background: linear-gradient(180deg, rgba(14, 23, 41, 1) 0%, rgba(9, 15, 29, 1) 100%);
+
+}
+
+.main-window {
+    width: 1200px;
+    padding: 0px 0px 0px 0px;
+    margin: 40px auto 0 auto;
+    background-color: gray;
+    border-radius: 0px;
+}
+
+.main-window button {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+tr {
+    cursor: pointer;
+}
+
+tr.selected {
+    background-color: #ffcccc;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: red;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal:target {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    text-decoration: none;
+    font-size: 24px;
+    position: absolute;
+    color: #000;
+}
+
+.close:hover {
+    color: red;
+}
